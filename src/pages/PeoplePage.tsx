@@ -7,10 +7,11 @@ import { Button } from '../components/Button'
 import { Avatar } from '../components/Avatar'
 import { AddPersonSheet } from '../components/AddPersonSheet'
 import { formatDate } from '../utils/date'
+import { lastWorkoutOf, workoutsOf, workoutTitle } from '../utils/workouts'
 import styles from './PeoplePage.module.css'
 
 export function PeoplePage() {
-  const { people, createPerson } = usePeopleContext()
+  const { people, favoriteId, createPerson, toggleFavorite } = usePeopleContext()
   const { workouts } = useWorkoutsContext()
   const navigate = useNavigate()
   const [sheetOpen, setSheetOpen] = useState(false)
@@ -23,7 +24,7 @@ export function PeoplePage() {
 
   return (
     <div className={styles.page}>
-      <h1 className={styles.title}/>
+      <h1 className={styles.title}>Люди</h1>
 
       <Button full onClick={() => setSheetOpen(true)}>
         + Добавить человека
@@ -37,11 +38,9 @@ export function PeoplePage() {
       ) : (
         <div className={styles.list}>
           {people.map((p, i) => {
-            const own = workouts.filter((w) => w.personId === p.id)
-            const last = own.reduce<string | null>(
-              (acc, w) => (!acc || w.date > acc ? w.date : acc),
-              null,
-            )
+            const own = workoutsOf(workouts, p.id)
+            const last = lastWorkoutOf(workouts, p.id)
+            const isFavorite = favoriteId === p.id
             return (
               <Card
                 key={p.id}
@@ -51,16 +50,37 @@ export function PeoplePage() {
               >
                 <Avatar name={p.name} avatar={p.avatar} size={54} />
                 <div className={styles.info}>
-                  <div className={styles.name}>{p.name}</div>
-                  <div className={styles.meta}>
-                    {own.length === 0
-                      ? 'Нет тренировок'
-                      : `${own.length} ${pluralWorkouts(own.length)}${
-                          last ? ` · ${formatDate(last)}` : ''
-                        }`}
+                  <div className={styles.nameRow}>
+                    <span className={styles.name}>{p.name}</span>
+                    {isFavorite && <span className={styles.badge}>Основной</span>}
                   </div>
+                  {own.length === 0 ? (
+                    <div className={styles.meta}>Тренировок пока нет</div>
+                  ) : (
+                    <>
+                      {last && (
+                        <div className={styles.last}>
+                          Последняя: {workoutTitle(last)}
+                        </div>
+                      )}
+                      <div className={styles.meta}>
+                        {own.length} {pluralWorkouts(own.length)}
+                        {last ? ` · ${formatDate(last.date)}` : ''}
+                      </div>
+                    </>
+                  )}
                 </div>
-                <span className={styles.chevron}>›</span>
+                <button
+                  className={`${styles.star} ${isFavorite ? styles.starOn : ''}`}
+                  aria-label={isFavorite ? 'Снять основного' : 'Сделать основным'}
+                  aria-pressed={isFavorite}
+                  onClick={(e) => {
+                    e.stopPropagation()
+                    toggleFavorite(p.id)
+                  }}
+                >
+                  {isFavorite ? '★' : '☆'}
+                </button>
               </Card>
             )
           })}

@@ -4,15 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="4eb1cf52-3ce0-4e42-8037-f8ecd3920b14" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/NewWorkoutPage.module.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/NewWorkoutPage.module.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/PeoplePage.module.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/PeoplePage.module.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/PeoplePage.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/PeoplePage.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/PersonPage.module.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/PersonPage.module.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/PersonPage.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/PersonPage.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/WorkoutPage.module.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/WorkoutPage.module.css" afterDir="false" />
-    </list>
+    <list default="true" id="4eb1cf52-3ce0-4e42-8037-f8ecd3920b14" name="Changes" comment="fix" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -61,11 +53,24 @@
       <workItem from="1782335091051" duration="752000" />
       <workItem from="1782335861124" duration="868000" />
       <workItem from="1782336780859" duration="391000" />
-      <workItem from="1782337874523" duration="1637000" />
+      <workItem from="1782337874523" duration="2463000" />
     </task>
+    <task id="LOCAL-00001" summary="fix">
+      <option name="closed" value="true" />
+      <created>1782377905690</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1782377905690</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="fix" />
+    <option name="LAST_COMMIT_MESSAGE" value="fix" />
   </component>
 </project>

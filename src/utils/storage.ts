@@ -7,6 +7,7 @@ import { uid } from './id'
 
 const WORKOUTS_KEY = 'gym-tracker:workouts'
 const PEOPLE_KEY = 'gym-tracker:people'
+const FAVORITE_KEY = 'gym-tracker:favorite'
 // Версия схемы данных. Пригодится для будущих миграций при изменении формата.
 const SCHEMA_VERSION = 2
 
@@ -103,6 +104,26 @@ export function savePeople(people: Person[]): void {
     localStorage.setItem(PEOPLE_KEY, JSON.stringify(data))
   } catch (e) {
     console.error('Не удалось сохранить людей:', e)
+  }
+}
+
+// --- Фаворитный (основной) человек ---
+// Храним просто id выбранного человека, отдельным ключом.
+
+export function loadFavorite(): string | null {
+  try {
+    return localStorage.getItem(FAVORITE_KEY) || null
+  } catch {
+    return null
+  }
+}
+
+export function saveFavorite(personId: string | null): void {
+  try {
+    if (personId) localStorage.setItem(FAVORITE_KEY, personId)
+    else localStorage.removeItem(FAVORITE_KEY)
+  } catch (e) {
+    console.error('Не удалось сохранить основного человека:', e)
   }
 }
 

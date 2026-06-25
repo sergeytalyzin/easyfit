@@ -3,15 +3,20 @@
 
 import { useCallback, useEffect, useState } from 'react'
 import type { Person } from '../types'
-import { loadPeople, savePeople } from '../utils/storage'
+import { loadFavorite, loadPeople, saveFavorite, savePeople } from '../utils/storage'
 import { uid } from '../utils/id'
 
 export function usePeople() {
   const [people, setPeople] = useState<Person[]>(() => loadPeople())
+  const [favoriteId, setFavoriteId] = useState<string | null>(() => loadFavorite())
 
   useEffect(() => {
     savePeople(people)
   }, [people])
+
+  useEffect(() => {
+    saveFavorite(favoriteId)
+  }, [favoriteId])
 
   const createPerson = useCallback(
     (name: string, avatar?: string | null): Person => {
@@ -36,9 +41,28 @@ export function usePeople() {
 
   const deletePerson = useCallback((id: string) => {
     setPeople((prev) => prev.filter((p) => p.id !== id))
+    // Если удалили основного — снимаем фаворита.
+    setFavoriteId((cur) => (cur === id ? null : cur))
   }, [])
 
-  return { people, createPerson, updatePerson, deletePerson }
+  // Назначить/снять основного человека. Фаворит всегда только один.
+  const setFavorite = useCallback((id: string | null) => {
+    setFavoriteId(id)
+  }, [])
+
+  const toggleFavorite = useCallback((id: string) => {
+    setFavoriteId((cur) => (cur === id ? null : id))
+  }, [])
+
+  return {
+    people,
+    favoriteId,
+    createPerson,
+    updatePerson,
+    deletePerson,
+    setFavorite,
+    toggleFavorite,
+  }
 }
 
 export type PeopleApi = ReturnType<typeof usePeople>

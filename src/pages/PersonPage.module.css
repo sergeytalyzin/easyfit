@@ -14,7 +14,6 @@
   padding: 4px 0;
   align-self: flex-start;
   cursor: pointer;
-  font-weight: 600;
 }
 
 .profile {
@@ -37,6 +36,29 @@
   font-size: 15px;
   color: var(--text-secondary);
   margin: 0;
+}
+
+.favBtn {
+  appearance: none;
+  border: none;
+  margin-top: 6px;
+  background: var(--fill);
+  color: var(--text-secondary);
+  font-family: inherit;
+  font-size: 15px;
+  font-weight: 600;
+  padding: 9px 16px;
+  border-radius: 999px;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transition: transform 0.12s ease;
+}
+.favBtn:active {
+  transform: scale(0.96);
+}
+.favBtnOn {
+  background: rgba(255, 179, 0, 0.15);
+  color: #d98a00;
 }
 
 .empty {

@@ -5,7 +5,10 @@
 }
 
 .title {
-  min-height: 15px;
+  font-size: 34px;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  margin: 8px 0 4px;
 }
 
 .empty {
@@ -39,10 +42,38 @@
   min-width: 0;
 }
 
+.nameRow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+}
+
 .name {
   font-size: 18px;
   font-weight: 700;
   color: var(--text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.badge {
+  flex: 0 0 auto;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  color: var(--blue);
+  background: rgba(0, 122, 255, 0.12);
+  padding: 3px 8px;
+  border-radius: 999px;
+}
+
+.last {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text);
+  margin-top: 3px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -54,10 +85,22 @@
   margin-top: 2px;
 }
 
-.chevron {
-  font-size: 26px;
-  font-weight: 400;
-  color: var(--text-tertiary);
+.star {
+  appearance: none;
+  border: none;
+  background: transparent;
   flex: 0 0 auto;
+  font-size: 26px;
   line-height: 1;
+  color: var(--text-tertiary);
+  padding: 6px;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transition: transform 0.12s ease, color 0.12s ease;
+}
+.star:active {
+  transform: scale(0.82);
+}
+.starOn {
+  color: #ffb300;
 }

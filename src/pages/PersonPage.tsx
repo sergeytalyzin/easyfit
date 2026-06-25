@@ -5,12 +5,13 @@ import { Card } from '../components/Card'
 import { Button } from '../components/Button'
 import { Avatar } from '../components/Avatar'
 import { formatDate } from '../utils/date'
+import { lastWorkoutOf, workoutsOf } from '../utils/workouts'
 import styles from './PersonPage.module.css'
 
 export function PersonPage() {
   const { personId = '' } = useParams()
   const navigate = useNavigate()
-  const { people, deletePerson } = usePeopleContext()
+  const { people, favoriteId, deletePerson, toggleFavorite } = usePeopleContext()
   const { workouts, deleteWorkoutsByPerson } = useWorkoutsContext()
 
   const person = people.find((p) => p.id === personId)
@@ -19,7 +20,7 @@ export function PersonPage() {
     return (
       <div className={styles.page}>
         <button className={styles.back} onClick={() => navigate('/')}>
-          ‹ Назад
+          ‹ Люди
         </button>
         <p className={styles.missing}>Человек не найден.</p>
       </div>
@@ -27,11 +28,9 @@ export function PersonPage() {
   }
 
   // Тренировки конкретного человека — фильтр по personId.
-  const own = workouts.filter((w) => w.personId === person.id)
-  const last = own.reduce<string | null>(
-    (acc, w) => (!acc || w.date > acc ? w.date : acc),
-    null,
-  )
+  const own = workoutsOf(workouts, person.id)
+  const last = lastWorkoutOf(workouts, person.id)
+  const isFavorite = favoriteId === person.id
 
   function onDeletePerson() {
     if (confirm(`Удалить «${person!.name}» и все его тренировки?`)) {
@@ -44,7 +43,7 @@ export function PersonPage() {
   return (
     <div className={styles.page}>
       <button className={styles.back} onClick={() => navigate('/')}>
-        ‹ Назад
+        ‹ Люди
       </button>
 
       <header className={`${styles.profile} appear`}>
@@ -53,8 +52,15 @@ export function PersonPage() {
         <p className={styles.stats}>
           {own.length === 0
             ? 'Пока нет тренировок'
-            : `${own.length} трен.${last ? ` · последняя ${formatDate(last)}` : ''}`}
+            : `${own.length} трен.${last ? ` · последняя ${formatDate(last.date)}` : ''}`}
         </p>
+        <button
+          className={`${styles.favBtn} ${isFavorite ? styles.favBtnOn : ''}`}
+          onClick={() => toggleFavorite(person.id)}
+          aria-pressed={isFavorite}
+        >
+          {isFavorite ? '★ Основной' : '☆ Сделать основным'}
+        </button>
       </header>
 
       <Button full onClick={() => navigate(`/person/${person.id}/new`)}>
