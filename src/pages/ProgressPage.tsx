@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { Link, useNavigate, useParams } from 'react-router-dom'
 import { usePeopleContext } from '../hooks/PeopleContext'
 import { useCompletedWorkoutsContext } from '../hooks/CompletedWorkoutsContext'
@@ -69,7 +70,7 @@ export function ProgressPage() {
                 className={`${styles.link} appear`}
                 style={{ animationDelay: `${Math.min(i, 8) * 40}ms` }}
               >
-                <div className={`${styles.glass} ${styles.item}`}>
+                <div className={`${styles.glass} ${styles.entry}`}>
                   <div className={styles.dateBox}>
                     <span className={styles.date}>{formatDayKey(c.date)}</span>
                   </div>
@@ -93,6 +94,7 @@ export function ProgressPage() {
 }
 
 // Красивый график активности по дням за последние DAYS дней.
+// Столбики тапаются — показываем дату и число тренировок.
 function ActivityChart({ items }: { items: CompletedWorkout[] }) {
   const today = new Date()
 
@@ -104,6 +106,7 @@ function ActivityChart({ items }: { items: CompletedWorkout[] }) {
 
   const counts = days.map((d) => items.filter((c) => c.date === d.key).length)
   const max = Math.max(1, ...counts)
+  const [sel, setSel] = useState(DAYS - 1)
 
   const monthKey = dayKey(today).slice(0, 7)
   const thisMonth = items.filter((c) => c.date.slice(0, 7) === monthKey).length
@@ -121,13 +124,22 @@ function ActivityChart({ items }: { items: CompletedWorkout[] }) {
         </div>
       </div>
 
+      <div className={styles.readout}>
+        {formatDayKey(days[sel].key)} · {counts[sel]}{' '}
+        {counts[sel] === 1 ? 'тренировка' : 'трен.'}
+      </div>
+
       <div className={styles.chart}>
         {days.map((d, i) => (
           <div key={d.key} className={styles.col}>
             <div className={styles.barTrack}>
-              <div
-                className={`${styles.bar} ${counts[i] === 0 ? styles.barEmpty : ''}`}
+              <button
+                className={`${styles.bar} ${counts[i] === 0 ? styles.barEmpty : ''} ${
+                  i === sel ? styles.barSel : ''
+                }`}
                 style={{ height: `${(counts[i] / max) * 100}%` }}
+                onClick={() => setSel(i)}
+                aria-label={`${formatDayKey(d.key)}: ${counts[i]}`}
               />
             </div>
             <span className={styles.barLabel}>{d.label}</span>
@@ -139,13 +151,14 @@ function ActivityChart({ items }: { items: CompletedWorkout[] }) {
   )
 }
 
-// Компактная карточка прогресса по весам одного упражнения: имя + рекорд,
-// текущий вес с трендом и тонкий график максимального веса по сеансам.
+// Компактная карточка прогресса по весам одного упражнения. Столбики тапаются —
+// показываем, в какой день какой вес был.
 function WeightCard({ stat }: { stat: ExerciseStat }) {
   const sessions = stat.sessions
-  const last = sessions[sessions.length - 1]
-  const prev = sessions[sessions.length - 2]
-  const diff = prev ? last.maxWeight - prev.maxWeight : 0
+  const [sel, setSel] = useState(sessions.length - 1)
+  const cur = sessions[sel]
+  const prev = sessions[sel - 1]
+  const diff = prev ? cur.maxWeight - prev.maxWeight : 0
   const max = stat.bestWeight || 1
 
   return (
@@ -153,10 +166,12 @@ function WeightCard({ stat }: { stat: ExerciseStat }) {
       <div className={styles.weightTop}>
         <div className={styles.weightInfo}>
           <span className={styles.weightName}>{stat.name}</span>
-          <span className={styles.weightSub}>рекорд {stat.bestWeight} кг</span>
+          <span className={styles.weightSub}>
+            {formatDayKey(cur.date)} · {cur.maxWeight} кг × {cur.topReps}
+          </span>
         </div>
         <div className={styles.weightRight}>
-          <span className={styles.weightNum}>{last.maxWeight} кг</span>
+          <span className={styles.weightNum}>{cur.maxWeight} кг</span>
           {prev && (
             <span
               className={`${styles.trend} ${
@@ -171,13 +186,14 @@ function WeightCard({ stat }: { stat: ExerciseStat }) {
 
       <div className={styles.weightChart}>
         {sessions.map((s, i) => (
-          <div
+          <button
             key={i}
             className={`${styles.wBar} ${
               s.maxWeight === stat.bestWeight ? styles.wBarBest : ''
-            }`}
+            } ${i === sel ? styles.wBarSel : ''}`}
             style={{ height: `${Math.max(8, (s.maxWeight / max) * 100)}%` }}
-            title={`${formatDayKey(s.date)} · ${s.maxWeight} кг × ${s.topReps}`}
+            onClick={() => setSel(i)}
+            aria-label={`${formatDayKey(s.date)} ${s.maxWeight} кг`}
           />
         ))}
       </div>

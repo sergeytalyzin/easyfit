@@ -42,22 +42,37 @@
   margin-bottom: 12px;
 }
 
-/* Жидкое стекло в стиле Apple: полупрозрачный фон, размытие подложки,
-   светлая кромка и мягкая тень. */
+/* Жидкое стекло в стиле Apple: полупрозрачный фон, сильное размытие подложки,
+   светлая кромка и мягкая тень. Крупный радиус — как у папки на iOS. */
 .glass {
-  background: rgba(255, 255, 255, 0.55);
-  -webkit-backdrop-filter: blur(22px) saturate(180%);
-  backdrop-filter: blur(22px) saturate(180%);
-  border: 1px solid rgba(255, 255, 255, 0.6);
-  border-radius: 20px;
-  padding: 16px;
-  box-shadow: 0 6px 24px rgba(20, 30, 60, 0.08);
+  background: rgba(255, 255, 255, 0.45);
+  -webkit-backdrop-filter: blur(30px) saturate(180%);
+  backdrop-filter: blur(30px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.55);
+  border-radius: 28px;
+  padding: 18px;
+  box-shadow: 0 8px 30px rgba(20, 30, 60, 0.1);
+  transition: transform 0.2s cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+
+/* Лёгкое увеличение при тапе — как раскрытие папки на iPhone. */
+.chartCard:active,
+.weightCard:active,
+.entry:active {
+  transform: scale(1.03);
 }
 
 .chartCard {
   display: flex;
   flex-direction: column;
   gap: 14px;
+}
+
+/* Подпись с выбранным значением графика */
+.readout {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--blue);
 }
 
 .statsRow {
@@ -113,15 +128,28 @@
 }
 
 .bar {
+  appearance: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
   width: 100%;
   max-width: 16px;
   min-height: 4px;
   border-radius: 5px 5px 3px 3px;
   background: linear-gradient(180deg, #4ea1ff 0%, var(--blue) 100%);
-  transition: height 0.35s cubic-bezier(0.22, 0.61, 0.36, 1);
+  -webkit-tap-highlight-color: transparent;
+  transition: height 0.35s cubic-bezier(0.22, 0.61, 0.36, 1),
+    transform 0.15s ease, filter 0.15s ease;
+}
+.bar:active {
+  transform: scaleY(1.06);
 }
 .barEmpty {
-  background: var(--fill);
+  background: rgba(120, 130, 150, 0.18);
+}
+.barSel {
+  filter: brightness(1.12);
+  box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.8), 0 0 10px rgba(0, 122, 255, 0.45);
 }
 
 .barLabel {
@@ -214,15 +242,28 @@
 }
 
 .wBar {
+  appearance: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
   flex: 1 1 0;
   min-width: 3px;
   max-width: 18px;
   border-radius: 4px 4px 2px 2px;
   background: linear-gradient(180deg, #4ea1ff 0%, var(--blue) 100%);
-  transition: height 0.3s cubic-bezier(0.22, 0.61, 0.36, 1);
+  -webkit-tap-highlight-color: transparent;
+  transition: height 0.3s cubic-bezier(0.22, 0.61, 0.36, 1),
+    transform 0.15s ease, filter 0.15s ease;
+}
+.wBar:active {
+  transform: scaleY(1.06);
 }
 .wBarBest {
   background: linear-gradient(180deg, #ffd25a 0%, #ffb300 100%);
+}
+.wBarSel {
+  filter: brightness(1.12);
+  box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.85), 0 0 10px rgba(0, 122, 255, 0.45);
 }
 
 .list {
@@ -249,7 +290,7 @@
   color: inherit;
 }
 
-.item {
+.entry {
   display: flex;
   align-items: center;
   gap: 14px;
