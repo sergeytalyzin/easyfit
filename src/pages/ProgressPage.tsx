@@ -2,7 +2,6 @@ import { Link, useNavigate, useParams } from 'react-router-dom'
 import { usePeopleContext } from '../hooks/PeopleContext'
 import { useCompletedWorkoutsContext } from '../hooks/CompletedWorkoutsContext'
 import type { CompletedWorkout } from '../types'
-import { Card } from '../components/Card'
 import { dayKey, formatDayKey } from '../utils/date'
 import { exerciseStats, type ExerciseStat } from '../utils/workouts'
 import styles from './ProgressPage.module.css'
@@ -13,7 +12,7 @@ export function ProgressPage() {
   const { personId = '' } = useParams()
   const navigate = useNavigate()
   const { people } = usePeopleContext()
-  const { completed } = useCompletedWorkoutsContext()
+  const { completed, deleteCompletedByPerson } = useCompletedWorkoutsContext()
 
   const person = people.find((p) => p.id === personId)
   // Выполненные тренировки человека, свежие сверху.
@@ -27,6 +26,12 @@ export function ProgressPage() {
 
   // Прогресс по весам считаем по фактически выполненным тренировкам.
   const weightStats = exerciseStats(own)
+
+  function onClear() {
+    if (confirm('Очистить весь прогресс? Выполненные тренировки будут удалены.')) {
+      deleteCompletedByPerson(personId)
+    }
+  }
 
   return (
     <div className={styles.page}>
@@ -64,7 +69,7 @@ export function ProgressPage() {
                 className={`${styles.link} appear`}
                 style={{ animationDelay: `${Math.min(i, 8) * 40}ms` }}
               >
-                <Card className={styles.item}>
+                <div className={`${styles.glass} ${styles.item}`}>
                   <div className={styles.dateBox}>
                     <span className={styles.date}>{formatDayKey(c.date)}</span>
                   </div>
@@ -73,10 +78,14 @@ export function ProgressPage() {
                     <div className={styles.meta}>{c.exercises.length} упр.</div>
                   </div>
                   <span className={styles.chevron}>›</span>
-                </Card>
+                </div>
               </Link>
             ))}
           </div>
+
+          <button className={styles.clear} onClick={onClear}>
+            Очистить прогресс
+          </button>
         </>
       )}
     </div>
@@ -100,7 +109,7 @@ function ActivityChart({ items }: { items: CompletedWorkout[] }) {
   const thisMonth = items.filter((c) => c.date.slice(0, 7) === monthKey).length
 
   return (
-    <Card className={`${styles.chartCard} appear`}>
+    <div className={`${styles.glass} ${styles.chartCard} appear`}>
       <div className={styles.statsRow}>
         <div className={styles.stat}>
           <span className={styles.statNum}>{items.length}</span>
@@ -126,12 +135,12 @@ function ActivityChart({ items }: { items: CompletedWorkout[] }) {
         ))}
       </div>
       <div className={styles.chartCaption}>тренировок по дням</div>
-    </Card>
+    </div>
   )
 }
 
-// Карточка прогресса по весам одного упражнения: столбики максимального веса
-// по сеансам + текущее значение и рекорд.
+// Компактная карточка прогресса по весам одного упражнения: имя + рекорд,
+// текущий вес с трендом и тонкий график максимального веса по сеансам.
 function WeightCard({ stat }: { stat: ExerciseStat }) {
   const sessions = stat.sessions
   const last = sessions[sessions.length - 1]
@@ -140,23 +149,24 @@ function WeightCard({ stat }: { stat: ExerciseStat }) {
   const max = stat.bestWeight || 1
 
   return (
-    <Card className={`${styles.weightCard} appear`}>
-      <div className={styles.weightHead}>
-        <span className={styles.weightName}>{stat.name}</span>
-        <span className={styles.weightBest}>рекорд {stat.bestWeight} кг</span>
-      </div>
-
-      <div className={styles.weightCurrent}>
-        <span className={styles.weightNum}>{last.maxWeight} кг</span>
-        {prev && (
-          <span
-            className={`${styles.trend} ${
-              diff > 0 ? styles.up : diff < 0 ? styles.down : styles.flat
-            }`}
-          >
-            {diff > 0 ? `↑ +${diff}` : diff < 0 ? `↓ ${diff}` : '→'}
-          </span>
-        )}
+    <div className={`${styles.glass} ${styles.weightCard} appear`}>
+      <div className={styles.weightTop}>
+        <div className={styles.weightInfo}>
+          <span className={styles.weightName}>{stat.name}</span>
+          <span className={styles.weightSub}>рекорд {stat.bestWeight} кг</span>
+        </div>
+        <div className={styles.weightRight}>
+          <span className={styles.weightNum}>{last.maxWeight} кг</span>
+          {prev && (
+            <span
+              className={`${styles.trend} ${
+                diff > 0 ? styles.up : diff < 0 ? styles.down : styles.flat
+              }`}
+            >
+              {diff > 0 ? `↑+${diff}` : diff < 0 ? `↓${diff}` : '→'}
+            </span>
+          )}
+        </div>
       </div>
 
       <div className={styles.weightChart}>
@@ -171,6 +181,6 @@ function WeightCard({ stat }: { stat: ExerciseStat }) {
           />
         ))}
       </div>
-    </Card>
+    </div>
   )
 }

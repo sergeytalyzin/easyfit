@@ -42,6 +42,18 @@
   margin-bottom: 12px;
 }
 
+/* Жидкое стекло в стиле Apple: полупрозрачный фон, размытие подложки,
+   светлая кромка и мягкая тень. */
+.glass {
+  background: rgba(255, 255, 255, 0.55);
+  -webkit-backdrop-filter: blur(22px) saturate(180%);
+  backdrop-filter: blur(22px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  border-radius: 20px;
+  padding: 16px;
+  box-shadow: 0 6px 24px rgba(20, 30, 60, 0.08);
+}
+
 .chartCard {
   display: flex;
   flex-direction: column;
@@ -131,51 +143,57 @@
   margin: 8px 0 -4px;
 }
 
-/* Прогресс по весам */
+/* Прогресс по весам — компактная карточка */
 .weightCard {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 8px;
+  padding: 12px 14px;
 }
 
-.weightHead {
+.weightTop {
   display: flex;
-  align-items: baseline;
+  align-items: center;
   justify-content: space-between;
   gap: 10px;
 }
 
+.weightInfo {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
 .weightName {
-  font-size: 18px;
+  font-size: 16px;
   font-weight: 700;
   color: var(--text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
-.weightBest {
-  flex: 0 0 auto;
+.weightSub {
   font-size: 12px;
-  font-weight: 700;
-  color: #d98a00;
-  background: rgba(255, 179, 0, 0.15);
-  padding: 3px 9px;
-  border-radius: 999px;
+  color: var(--text-secondary);
 }
 
-.weightCurrent {
+.weightRight {
+  flex: 0 0 auto;
   display: flex;
   align-items: baseline;
-  gap: 10px;
+  gap: 6px;
 }
 
 .weightNum {
-  font-size: 26px;
+  font-size: 20px;
   font-weight: 800;
   letter-spacing: -0.02em;
   color: var(--text);
 }
 
 .trend {
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 700;
 }
 .up {
@@ -191,15 +209,15 @@
 .weightChart {
   display: flex;
   align-items: flex-end;
-  gap: 5px;
-  height: 70px;
+  gap: 4px;
+  height: 44px;
 }
 
 .wBar {
   flex: 1 1 0;
-  min-width: 4px;
-  max-width: 24px;
-  border-radius: 5px 5px 3px 3px;
+  min-width: 3px;
+  max-width: 18px;
+  border-radius: 4px 4px 2px 2px;
   background: linear-gradient(180deg, #4ea1ff 0%, var(--blue) 100%);
   transition: height 0.3s cubic-bezier(0.22, 0.61, 0.36, 1);
 }
@@ -211,6 +229,19 @@
   display: flex;
   flex-direction: column;
   gap: 12px;
+}
+
+.clear {
+  appearance: none;
+  border: none;
+  background: transparent;
+  color: var(--red);
+  font-family: inherit;
+  font-size: 16px;
+  padding: 12px;
+  margin-top: 8px;
+  cursor: pointer;
+  align-self: center;
 }
 
 .link {
