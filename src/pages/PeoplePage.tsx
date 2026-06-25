@@ -24,7 +24,7 @@ export function PeoplePage() {
 
   return (
     <div className={styles.page}>
-      <h1 className={styles.title}>Люди</h1>
+      <h1 className={styles.title}/>
 
       <Button full onClick={() => setSheetOpen(true)}>
         + Добавить человека

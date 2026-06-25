@@ -20,7 +20,7 @@ export function PersonPage() {
     return (
       <div className={styles.page}>
         <button className={styles.back} onClick={() => navigate('/')}>
-          ‹ Люди
+          ‹ Назад
         </button>
         <p className={styles.missing}>Человек не найден.</p>
       </div>
@@ -43,7 +43,7 @@ export function PersonPage() {
   return (
     <div className={styles.page}>
       <button className={styles.back} onClick={() => navigate('/')}>
-        ‹ Люди
+        ‹ Назад
       </button>
 
       <header className={`${styles.profile} appear`}>
