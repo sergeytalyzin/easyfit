@@ -1,10 +1,12 @@
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { useWorkoutsContext } from '../hooks/WorkoutsContext'
 import { usePeopleContext } from '../hooks/PeopleContext'
+import { useCompletedWorkoutsContext } from '../hooks/CompletedWorkoutsContext'
 import { ExerciseItem } from '../components/ExerciseItem'
 import { Button } from '../components/Button'
 import { CopyWorkoutSheet } from '../components/CopyWorkoutSheet'
+import { MarkWorkoutSheet } from '../components/MarkWorkoutSheet'
 import { formatDate } from '../utils/date'
 import styles from './WorkoutPage.module.css'
 
@@ -13,7 +15,9 @@ export function WorkoutPage() {
   const navigate = useNavigate()
   const backToPerson = `/person/${personId}`
   const [copyOpen, setCopyOpen] = useState(false)
+  const [markOpen, setMarkOpen] = useState(false)
   const { people } = usePeopleContext()
+  const { completed, completeTemplate } = useCompletedWorkoutsContext()
   const {
     workouts,
     updateWorkout,
@@ -26,6 +30,15 @@ export function WorkoutPage() {
     updateSet,
     deleteSet,
   } = useWorkoutsContext()
+
+  // Дни с уже отмеченными тренировками — для точек в календаре.
+  const markedKeys = useMemo(
+    () =>
+      new Set(
+        completed.filter((c) => c.personId === personId).map((c) => c.date),
+      ),
+    [completed, personId],
+  )
 
   const workout = workouts.find((w) => w.id === id)
 
@@ -53,6 +66,12 @@ export function WorkoutPage() {
     if (copy) navigate(`/person/${targetPersonId}/workout/${copy.id}`)
   }
 
+  function onMarkDone(dayKeyValue: string, exerciseIds: string[]) {
+    completeTemplate(workout!, dayKeyValue, exerciseIds)
+    setMarkOpen(false)
+    navigate(`/person/${personId}/progress`)
+  }
+
   return (
     <div className={styles.page}>
       <button className={styles.back} onClick={() => navigate(backToPerson)}>
@@ -68,6 +87,10 @@ export function WorkoutPage() {
         />
         <div className={styles.date}>{formatDate(workout.date)}</div>
       </div>
+
+      <Button full onClick={() => setMarkOpen(true)}>
+        ✓ Отметить выполнение
+      </Button>
 
       <div className={styles.exercises}>
         {workout.exercises.map((ex) => (
@@ -101,6 +124,14 @@ export function WorkoutPage() {
         people={people}
         currentPersonId={personId}
         onPick={onCopyTo}
+      />
+
+      <MarkWorkoutSheet
+        open={markOpen}
+        onClose={() => setMarkOpen(false)}
+        template={workout}
+        markedKeys={markedKeys}
+        onSave={onMarkDone}
       />
     </div>
   )

@@ -4,9 +4,10 @@ import { useCompletedWorkoutsContext } from '../hooks/CompletedWorkoutsContext'
 import type { CompletedWorkout } from '../types'
 import { Card } from '../components/Card'
 import { dayKey, formatDayKey } from '../utils/date'
+import { exerciseStats, type ExerciseStat } from '../utils/workouts'
 import styles from './ProgressPage.module.css'
 
-const WEEKS = 8
+const DAYS = 14
 
 export function ProgressPage() {
   const { personId = '' } = useParams()
@@ -24,6 +25,9 @@ export function ProgressPage() {
         : b.date.localeCompare(a.date),
     )
 
+  // Прогресс по весам считаем по фактически выполненным тренировкам.
+  const weightStats = exerciseStats(own)
+
   return (
     <div className={styles.page}>
       <button className={styles.back} onClick={() => navigate(`/person/${personId}`)}>
@@ -36,66 +40,63 @@ export function ProgressPage() {
       {own.length === 0 ? (
         <div className={styles.empty}>
           <div className={styles.emptyIcon}>📅</div>
-          <p>Отметьте выполненную тренировку в календаре.</p>
+          <p>Отметьте выполнение тренировки в шаблоне.</p>
         </div>
       ) : (
         <>
           <ActivityChart items={own} />
 
-        <div className={styles.list}>
-          {own.map((c, i) => (
-            <Link
-              key={c.id}
-              to={`/person/${personId}/completed/${c.id}`}
-              className={`${styles.link} appear`}
-              style={{ animationDelay: `${Math.min(i, 8) * 40}ms` }}
-            >
-              <Card className={styles.item}>
-                <div className={styles.dateBox}>
-                  <span className={styles.date}>{formatDayKey(c.date)}</span>
-                </div>
-                <div className={styles.info}>
-                  <div className={styles.name}>{c.name}</div>
-                  <div className={styles.meta}>{c.exercises.length} упр.</div>
-                </div>
-                <span className={styles.chevron}>›</span>
-              </Card>
-            </Link>
-          ))}
-        </div>
+          {weightStats.length > 0 && (
+            <>
+              <h2 className={styles.section}>Прогресс по весам</h2>
+              {weightStats.map((stat) => (
+                <WeightCard key={stat.name} stat={stat} />
+              ))}
+            </>
+          )}
+
+          <h2 className={styles.section}>История</h2>
+          <div className={styles.list}>
+            {own.map((c, i) => (
+              <Link
+                key={c.id}
+                to={`/person/${personId}/completed/${c.id}`}
+                className={`${styles.link} appear`}
+                style={{ animationDelay: `${Math.min(i, 8) * 40}ms` }}
+              >
+                <Card className={styles.item}>
+                  <div className={styles.dateBox}>
+                    <span className={styles.date}>{formatDayKey(c.date)}</span>
+                  </div>
+                  <div className={styles.info}>
+                    <div className={styles.name}>{c.name}</div>
+                    <div className={styles.meta}>{c.exercises.length} упр.</div>
+                  </div>
+                  <span className={styles.chevron}>›</span>
+                </Card>
+              </Link>
+            ))}
+          </div>
         </>
       )}
     </div>
   )
 }
 
-// Понедельник недели, в которую попадает дата (локально, 00:00).
-function startOfWeek(d: Date): Date {
-  const x = new Date(d.getFullYear(), d.getMonth(), d.getDate())
-  const shift = (x.getDay() + 6) % 7 // 0 = понедельник
-  x.setDate(x.getDate() - shift)
-  return x
-}
-
-// Красивый график активности: количество тренировок по неделям.
+// Красивый график активности по дням за последние DAYS дней.
 function ActivityChart({ items }: { items: CompletedWorkout[] }) {
-  const thisMonday = startOfWeek(new Date())
+  const today = new Date()
 
-  // Границы последних WEEKS недель (от старых к новым) в виде ключей дней.
-  const weeks = Array.from({ length: WEEKS }, (_, i) => {
-    const start = new Date(thisMonday)
-    start.setDate(start.getDate() - 7 * (WEEKS - 1 - i))
-    const end = new Date(start)
-    end.setDate(end.getDate() + 7)
-    return { startKey: dayKey(start), endKey: dayKey(end), label: start.getDate() }
+  const days = Array.from({ length: DAYS }, (_, i) => {
+    const d = new Date(today.getFullYear(), today.getMonth(), today.getDate())
+    d.setDate(d.getDate() - (DAYS - 1 - i))
+    return { key: dayKey(d), label: d.getDate() }
   })
 
-  const counts = weeks.map(
-    (w) => items.filter((c) => c.date >= w.startKey && c.date < w.endKey).length,
-  )
+  const counts = days.map((d) => items.filter((c) => c.date === d.key).length)
   const max = Math.max(1, ...counts)
 
-  const monthKey = dayKey(new Date()).slice(0, 7)
+  const monthKey = dayKey(today).slice(0, 7)
   const thisMonth = items.filter((c) => c.date.slice(0, 7) === monthKey).length
 
   return (
@@ -112,20 +113,64 @@ function ActivityChart({ items }: { items: CompletedWorkout[] }) {
       </div>
 
       <div className={styles.chart}>
-        {weeks.map((w, i) => (
-          <div key={w.startKey} className={styles.col}>
-            <span className={styles.barVal}>{counts[i] || ''}</span>
+        {days.map((d, i) => (
+          <div key={d.key} className={styles.col}>
             <div className={styles.barTrack}>
               <div
-                className={styles.bar}
+                className={`${styles.bar} ${counts[i] === 0 ? styles.barEmpty : ''}`}
                 style={{ height: `${(counts[i] / max) * 100}%` }}
               />
             </div>
-            <span className={styles.barLabel}>{w.label}</span>
+            <span className={styles.barLabel}>{d.label}</span>
           </div>
         ))}
       </div>
-      <div className={styles.chartCaption}>тренировок по неделям</div>
+      <div className={styles.chartCaption}>тренировок по дням</div>
+    </Card>
+  )
+}
+
+// Карточка прогресса по весам одного упражнения: столбики максимального веса
+// по сеансам + текущее значение и рекорд.
+function WeightCard({ stat }: { stat: ExerciseStat }) {
+  const sessions = stat.sessions
+  const last = sessions[sessions.length - 1]
+  const prev = sessions[sessions.length - 2]
+  const diff = prev ? last.maxWeight - prev.maxWeight : 0
+  const max = stat.bestWeight || 1
+
+  return (
+    <Card className={`${styles.weightCard} appear`}>
+      <div className={styles.weightHead}>
+        <span className={styles.weightName}>{stat.name}</span>
+        <span className={styles.weightBest}>рекорд {stat.bestWeight} кг</span>
+      </div>
+
+      <div className={styles.weightCurrent}>
+        <span className={styles.weightNum}>{last.maxWeight} кг</span>
+        {prev && (
+          <span
+            className={`${styles.trend} ${
+              diff > 0 ? styles.up : diff < 0 ? styles.down : styles.flat
+            }`}
+          >
+            {diff > 0 ? `↑ +${diff}` : diff < 0 ? `↓ ${diff}` : '→'}
+          </span>
+        )}
+      </div>
+
+      <div className={styles.weightChart}>
+        {sessions.map((s, i) => (
+          <div
+            key={i}
+            className={`${styles.wBar} ${
+              s.maxWeight === stat.bestWeight ? styles.wBarBest : ''
+            }`}
+            style={{ height: `${Math.max(8, (s.maxWeight / max) * 100)}%` }}
+            title={`${formatDayKey(s.date)} · ${s.maxWeight} кг × ${s.topReps}`}
+          />
+        ))}
+      </div>
     </Card>
   )
 }

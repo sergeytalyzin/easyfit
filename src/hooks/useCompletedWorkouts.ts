@@ -25,8 +25,16 @@ export function useCompletedWorkouts() {
   }, [completed])
 
   // Отметить шаблон выполненным на дату (YYYY-MM-DD): снимаем копию упражнений.
+  // exerciseIds — какие упражнения реально сделаны (если не задано — все).
   const completeTemplate = useCallback(
-    (template: Workout, dayKeyValue: string): CompletedWorkout => {
+    (
+      template: Workout,
+      dayKeyValue: string,
+      exerciseIds?: string[],
+    ): CompletedWorkout => {
+      const source = exerciseIds
+        ? template.exercises.filter((e) => exerciseIds.includes(e.id))
+        : template.exercises
       const record: CompletedWorkout = {
         id: uid(),
         personId: template.personId,
@@ -34,7 +42,7 @@ export function useCompletedWorkouts() {
         name: template.name,
         date: dayKeyValue,
         createdAt: new Date().toISOString(),
-        exercises: cloneExercises(template.exercises, uid),
+        exercises: cloneExercises(source, uid),
       }
       setCompleted((prev) => [record, ...prev])
       return record

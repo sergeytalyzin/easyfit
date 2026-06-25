@@ -1,4 +1,3 @@
-import { useMemo, useState } from 'react'
 import { Link, useNavigate, useParams } from 'react-router-dom'
 import { usePeopleContext } from '../hooks/PeopleContext'
 import { useWorkoutsContext } from '../hooks/WorkoutsContext'
@@ -6,10 +5,8 @@ import { useCompletedWorkoutsContext } from '../hooks/CompletedWorkoutsContext'
 import { Card } from '../components/Card'
 import { Button } from '../components/Button'
 import { Avatar } from '../components/Avatar'
-import { MarkWorkoutSheet } from '../components/MarkWorkoutSheet'
 import { formatDate } from '../utils/date'
 import { lastWorkoutOf, workoutsOf } from '../utils/workouts'
-import type { Workout } from '../types'
 import styles from './PersonPage.module.css'
 
 export function PersonPage() {
@@ -17,21 +14,9 @@ export function PersonPage() {
   const navigate = useNavigate()
   const { people, favoriteId, deletePerson, toggleFavorite } = usePeopleContext()
   const { workouts, deleteWorkoutsByPerson } = useWorkoutsContext()
-  const { completed, completeTemplate, deleteCompletedByPerson } =
-    useCompletedWorkoutsContext()
-
-  const [markOpen, setMarkOpen] = useState(false)
+  const { deleteCompletedByPerson } = useCompletedWorkoutsContext()
 
   const person = people.find((p) => p.id === personId)
-
-  // Дни с выполненными тренировками — для точек в календаре.
-  const markedKeys = useMemo(
-    () =>
-      new Set(
-        completed.filter((c) => c.personId === personId).map((c) => c.date),
-      ),
-    [completed, personId],
-  )
 
   if (!person) {
     return (
@@ -58,11 +43,6 @@ export function PersonPage() {
     }
   }
 
-  function onSaveCompleted(template: Workout, dayKeyValue: string) {
-    completeTemplate(template, dayKeyValue)
-    setMarkOpen(false)
-  }
-
   return (
     <div className={styles.page}>
       <button className={styles.back} onClick={() => navigate('/')}>
@@ -86,20 +66,14 @@ export function PersonPage() {
         </button>
       </header>
 
-      {/* Отметить выполненную тренировку (календарь — внутри попапа) */}
-      <Button full onClick={() => setMarkOpen(true)}>
-        + Отметить тренировку
-      </Button>
-
       <Button
         full
-        variant="secondary"
         onClick={() => navigate(`/person/${person.id}/progress`)}
       >
         📅 Прогресс
       </Button>
 
-      {/* Шаблоны тренировок */}
+      {/* Шаблоны тренировок — внутри открываешь и отмечаешь выполнение */}
       <h2 className={styles.section}>Шаблоны тренировок</h2>
 
       <Button
@@ -109,16 +83,6 @@ export function PersonPage() {
       >
         + Новый шаблон
       </Button>
-
-      {own.length > 0 && (
-        <Button
-          full
-          variant="secondary"
-          onClick={() => navigate(`/person/${person.id}/stats`)}
-        >
-          📈 Прогресс по весам
-        </Button>
-      )}
 
       {own.length === 0 ? (
         <div className={styles.empty}>
@@ -152,14 +116,6 @@ export function PersonPage() {
       <button className={styles.deletePerson} onClick={onDeletePerson}>
         Удалить человека
       </button>
-
-      <MarkWorkoutSheet
-        open={markOpen}
-        onClose={() => setMarkOpen(false)}
-        templates={own}
-        markedKeys={markedKeys}
-        onSave={onSaveCompleted}
-      />
     </div>
   )
 }

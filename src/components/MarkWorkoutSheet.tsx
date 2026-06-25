@@ -9,40 +9,48 @@ import styles from './MarkWorkoutSheet.module.css'
 interface Props {
   open: boolean
   onClose: () => void
-  templates: Workout[]
+  template: Workout
   markedKeys: Set<string>
-  onSave: (template: Workout, dayKeyValue: string) => void
+  onSave: (dayKeyValue: string, exerciseIds: string[]) => void
 }
 
-// Отметить выполненную тренировку: выбрать дату в календаре, выбрать шаблон,
-// сохранить. Календарь живёт внутри шита, поэтому не мешает на экране.
+// Отметить выполнение шаблона: выбрать дату, отметить сделанные упражнения,
+// сохранить или отменить. Календарь внутри попапа — не мешает на экране.
 export function MarkWorkoutSheet({
   open,
   onClose,
-  templates,
+  template,
   markedKeys,
   onSave,
 }: Props) {
   const [selectedDate, setSelectedDate] = useState(() => dayKey(new Date()))
-  const [selectedId, setSelectedId] = useState<string | null>(null)
+  const [checked, setChecked] = useState<Set<string>>(new Set())
 
-  // При каждом открытии — дата по умолчанию сегодня, выбор сброшен.
+  // При открытии: дата — сегодня, все упражнения отмечены сделанными.
   useEffect(() => {
     if (open) {
       setSelectedDate(dayKey(new Date()))
-      setSelectedId(null)
+      setChecked(new Set(template.exercises.map((e) => e.id)))
     }
-  }, [open])
+  }, [open, template])
+
+  function toggle(id: string) {
+    setChecked((prev) => {
+      const next = new Set(prev)
+      if (next.has(id)) next.delete(id)
+      else next.add(id)
+      return next
+    })
+  }
 
   function save() {
-    const template = templates.find((t) => t.id === selectedId)
-    if (!template) return
-    onSave(template, selectedDate)
+    if (checked.size === 0) return
+    onSave(selectedDate, [...checked])
   }
 
   return (
     <BottomSheet open={open} onClose={onClose}>
-      <h2 className={styles.title}>Отметить тренировку</h2>
+      <h2 className={styles.title}>Отметить «{template.name}»</h2>
 
       <Calendar
         flat
@@ -51,30 +59,38 @@ export function MarkWorkoutSheet({
         onSelect={setSelectedDate}
       />
 
-      {templates.length === 0 ? (
-        <p className={styles.empty}>Сначала создайте шаблон тренировки.</p>
+      {template.exercises.length === 0 ? (
+        <p className={styles.empty}>В шаблоне пока нет упражнений.</p>
       ) : (
-        <div className={styles.list}>
-          {templates.map((t) => {
-            const active = t.id === selectedId
-            return (
-              <button
-                key={t.id}
-                className={`${styles.row} ${active ? styles.rowActive : ''}`}
-                onClick={() => setSelectedId(t.id)}
-              >
-                <span className={styles.radio}>{active ? '●' : ''}</span>
-                <span className={styles.name}>{t.name}</span>
-                <span className={styles.count}>{t.exercises.length} упр.</span>
-              </button>
-            )
-          })}
-        </div>
+        <>
+          <p className={styles.subhead}>Какие упражнения сделали?</p>
+          <div className={styles.list}>
+            {template.exercises.map((ex) => {
+              const on = checked.has(ex.id)
+              return (
+                <button
+                  key={ex.id}
+                  className={`${styles.row} ${on ? styles.rowOn : ''}`}
+                  onClick={() => toggle(ex.id)}
+                >
+                  <span className={styles.check}>{on ? '✓' : ''}</span>
+                  <span className={styles.name}>{ex.name || 'Без названия'}</span>
+                  <span className={styles.count}>{ex.sets.length} подх.</span>
+                </button>
+              )
+            })}
+          </div>
+        </>
       )}
 
-      <Button full disabled={!selectedId} onClick={save}>
-        Сохранить
-      </Button>
+      <div className={styles.actions}>
+        <Button full variant="secondary" onClick={onClose}>
+          Отменить
+        </Button>
+        <Button full disabled={checked.size === 0} onClick={save}>
+          Сохранить
+        </Button>
+      </div>
     </BottomSheet>
   )
 }

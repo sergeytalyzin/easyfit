@@ -26,7 +26,6 @@ export function workoutTitle(w: Workout): string {
 
 // Один «сеанс» упражнения: данные одной тренировки по этому упражнению.
 export interface ExerciseSession {
-  workoutId: string
   date: string
   maxWeight: number // максимальный вес в этот день
   topReps: number // повторения в подходе с максимальным весом
@@ -40,16 +39,16 @@ export interface ExerciseStat {
   bestWeight: number // лучший вес за всё время
 }
 
-// Группирует все подходы человека по названию упражнения, чтобы строить
-// историю и прогресс по весам. Упражнения без названия или без подходов
-// пропускаем. Группировка регистронезависимая, но имя берём как введено.
+// Группирует подходы по названию упражнения, чтобы строить прогресс по весам.
+// Принимает уже отфильтрованный список сеансов (дата + упражнения) — подходит
+// и для шаблонов, и для выполненных тренировок. Упражнения без названия или
+// без подходов пропускаем. Группировка регистронезависимая.
 export function exerciseStats(
-  workouts: Workout[],
-  personId: string,
+  sessions: { date: string; exercises: Exercise[] }[],
 ): ExerciseStat[] {
   const map = new Map<string, ExerciseStat>()
 
-  for (const w of workoutsOf(workouts, personId)) {
+  for (const w of sessions) {
     for (const ex of w.exercises) {
       const name = ex.name.trim()
       if (!name || ex.sets.length === 0) continue
@@ -68,7 +67,6 @@ export function exerciseStats(
         map.set(key, stat)
       }
       stat.sessions.push({
-        workoutId: w.id,
         date: w.date,
         maxWeight,
         topReps: top.reps,

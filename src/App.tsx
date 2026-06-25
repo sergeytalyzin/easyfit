@@ -13,7 +13,6 @@ import { PeoplePage } from './pages/PeoplePage'
 import { PersonPage } from './pages/PersonPage'
 import { NewWorkoutPage } from './pages/NewWorkoutPage'
 import { WorkoutPage } from './pages/WorkoutPage'
-import { StatsPage } from './pages/StatsPage'
 import { ProgressPage } from './pages/ProgressPage'
 import { CompletedWorkoutPage } from './pages/CompletedWorkoutPage'
 
@@ -51,7 +50,6 @@ export default function App() {
                 <Route path="/" element={<PeoplePage />} />
                 <Route path="/person/:personId" element={<PersonPage />} />
                 <Route path="/person/:personId/new" element={<NewWorkoutPage />} />
-                <Route path="/person/:personId/stats" element={<StatsPage />} />
                 <Route
                   path="/person/:personId/progress"
                   element={<ProgressPage />}
