@@ -2,10 +2,11 @@
 // Это единственное место, которое знает про localStorage — поэтому
 // в будущем легко заменить хранилище (IndexedDB, экспорт/импорт, облако).
 
-import type { Person, Workout } from '../types'
+import type { CompletedWorkout, Person, Workout } from '../types'
 import { uid } from './id'
 
 const WORKOUTS_KEY = 'gym-tracker:workouts'
+const COMPLETED_KEY = 'gym-tracker:completed'
 const PEOPLE_KEY = 'gym-tracker:people'
 const FAVORITE_KEY = 'gym-tracker:favorite'
 // Версия схемы данных. Пригодится для будущих миграций при изменении формата.
@@ -19,6 +20,11 @@ interface StoredWorkouts {
 interface StoredPeople {
   version: number
   people: Person[]
+}
+
+interface StoredCompleted {
+  version: number
+  completed: CompletedWorkout[]
 }
 
 function readWorkoutsRaw(): Workout[] {
@@ -107,6 +113,31 @@ export function savePeople(people: Person[]): void {
   }
 }
 
+// --- Выполненные тренировки ---
+// Отдельное хранилище от шаблонов: ключ свой, изначально пустой.
+// Существующие данные пользователей не затрагиваются.
+
+export function loadCompleted(): CompletedWorkout[] {
+  try {
+    const raw = localStorage.getItem(COMPLETED_KEY)
+    if (!raw) return []
+    const data = JSON.parse(raw) as StoredCompleted
+    return Array.isArray(data?.completed) ? data.completed : []
+  } catch (e) {
+    console.error('Не удалось загрузить выполненные тренировки:', e)
+    return []
+  }
+}
+
+export function saveCompleted(completed: CompletedWorkout[]): void {
+  try {
+    const data: StoredCompleted = { version: SCHEMA_VERSION, completed }
+    localStorage.setItem(COMPLETED_KEY, JSON.stringify(data))
+  } catch (e) {
+    console.error('Не удалось сохранить выполненные тренировки:', e)
+  }
+}
+
 // --- Фаворитный (основной) человек ---
 // Храним просто id выбранного человека, отдельным ключом.
 
@@ -130,7 +161,12 @@ export function saveFavorite(personId: string | null): void {
 // Удобно для будущего экспорта данных.
 export function exportData(): string {
   return JSON.stringify(
-    { version: SCHEMA_VERSION, people: loadPeople(), workouts: loadWorkouts() },
+    {
+      version: SCHEMA_VERSION,
+      people: loadPeople(),
+      workouts: loadWorkouts(),
+      completed: loadCompleted(),
+    },
     null,
     2,
   )

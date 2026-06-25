@@ -27,3 +27,15 @@ export interface Workout {
   date: string // ISO-строка даты создания
   exercises: Exercise[]
 }
+
+// Выполненная тренировка — снимок шаблона на конкретную дату.
+// Хранится отдельно от шаблонов: редактируется независимо и не меняет шаблон.
+export interface CompletedWorkout {
+  id: string
+  personId: string
+  templateId: string | null // шаблон-источник (если был); null если шаблон удалён
+  name: string
+  date: string // день выполнения в формате YYYY-MM-DD
+  createdAt: string // ISO-строка момента отметки
+  exercises: Exercise[] // копия упражнений шаблона на момент отметки
+}

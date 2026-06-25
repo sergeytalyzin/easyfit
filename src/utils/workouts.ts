@@ -1,4 +1,4 @@
-import type { Workout, WorkoutSet } from '../types'
+import type { Exercise, Workout, WorkoutSet } from '../types'
 
 // Тренировки конкретного человека — единый фильтр по personId,
 // чтобы данные разных людей не смешивались.
@@ -94,4 +94,89 @@ export function exerciseStats(
 // Глубокая копия подходов с новыми id — для дублирования тренировки.
 export function cloneSets(sets: WorkoutSet[], makeId: () => string): WorkoutSet[] {
   return sets.map((s) => ({ id: makeId(), weight: s.weight, reps: s.reps }))
+}
+
+// Глубокая копия упражнений с новыми id — снимок шаблона.
+export function cloneExercises(
+  exercises: Exercise[],
+  makeId: () => string,
+): Exercise[] {
+  return exercises.map((e) => ({
+    id: makeId(),
+    name: e.name,
+    sets: cloneSets(e.sets, makeId),
+  }))
+}
+
+// --- Чистые иммутабельные операции над списком упражнений ---
+// Вынесены отдельно, чтобы их могли переиспользовать разные хранилища
+// (шаблоны и выполненные тренировки) без дублирования логики.
+
+export function addExerciseTo(
+  exercises: Exercise[],
+  name: string,
+  makeId: () => string,
+): Exercise[] {
+  return [...exercises, { id: makeId(), name: name.trim(), sets: [] }]
+}
+
+export function renameExerciseIn(
+  exercises: Exercise[],
+  exerciseId: string,
+  name: string,
+): Exercise[] {
+  return exercises.map((e) => (e.id === exerciseId ? { ...e, name } : e))
+}
+
+export function removeExerciseFrom(
+  exercises: Exercise[],
+  exerciseId: string,
+): Exercise[] {
+  return exercises.filter((e) => e.id !== exerciseId)
+}
+
+export function addSetTo(
+  exercises: Exercise[],
+  exerciseId: string,
+  makeId: () => string,
+): Exercise[] {
+  return exercises.map((e) => {
+    if (e.id !== exerciseId) return e
+    // Новый подход наследует значения предыдущего — меньше ввода.
+    const last = e.sets[e.sets.length - 1]
+    const set: WorkoutSet = {
+      id: makeId(),
+      weight: last ? last.weight : 0,
+      reps: last ? last.reps : 0,
+    }
+    return { ...e, sets: [...e.sets, set] }
+  })
+}
+
+export function updateSetIn(
+  exercises: Exercise[],
+  exerciseId: string,
+  setId: string,
+  patch: Partial<Omit<WorkoutSet, 'id'>>,
+): Exercise[] {
+  return exercises.map((e) =>
+    e.id === exerciseId
+      ? {
+          ...e,
+          sets: e.sets.map((s) => (s.id === setId ? { ...s, ...patch } : s)),
+        }
+      : e,
+  )
+}
+
+export function removeSetFrom(
+  exercises: Exercise[],
+  exerciseId: string,
+  setId: string,
+): Exercise[] {
+  return exercises.map((e) =>
+    e.id === exerciseId
+      ? { ...e, sets: e.sets.filter((s) => s.id !== setId) }
+      : e,
+  )
 }

@@ -1,0 +1,98 @@
+.page {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.back {
+  appearance: none;
+  border: none;
+  background: transparent;
+  color: var(--blue);
+  font-size: 17px;
+  font-family: inherit;
+  padding: 4px 0;
+  margin-top: 10px;
+  align-self: flex-start;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.title {
+  font-size: 28px;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  margin: 0;
+}
+
+.subtitle {
+  font-size: 15px;
+  color: var(--text-secondary);
+  margin: -10px 0 0;
+}
+
+.empty {
+  text-align: center;
+  color: var(--text-secondary);
+  font-size: 16px;
+  margin-top: 40px;
+}
+.emptyIcon {
+  font-size: 44px;
+  margin-bottom: 12px;
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.link {
+  text-decoration: none;
+  color: inherit;
+}
+
+.item {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.dateBox {
+  flex: 0 0 auto;
+  min-width: 84px;
+}
+
+.date {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--blue);
+}
+
+.info {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.name {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.meta {
+  font-size: 14px;
+  color: var(--text-secondary);
+  margin-top: 2px;
+}
+
+.chevron {
+  flex: 0 0 auto;
+  color: var(--text-tertiary);
+  font-size: 24px;
+  font-weight: 600;
+}

@@ -1,0 +1,62 @@
+.title {
+  font-size: 22px;
+  font-weight: 800;
+  margin: 0;
+  text-align: center;
+}
+
+.date {
+  font-size: 15px;
+  color: var(--text-secondary);
+  text-align: center;
+  margin: 4px 0 14px;
+  text-transform: capitalize;
+}
+
+.empty {
+  text-align: center;
+  color: var(--text-secondary);
+  font-size: 15px;
+  padding: 12px 0;
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  max-height: 60vh;
+  overflow-y: auto;
+}
+
+.row {
+  appearance: none;
+  border: none;
+  background: var(--fill);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  width: 100%;
+  padding: 16px 18px;
+  border-radius: 14px;
+  cursor: pointer;
+  font-family: inherit;
+  -webkit-tap-highlight-color: transparent;
+  transition: transform 0.12s ease;
+}
+.row:active {
+  transform: scale(0.98);
+}
+
+.name {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--text);
+}
+
+.count {
+  flex: 0 0 auto;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-secondary);
+}
