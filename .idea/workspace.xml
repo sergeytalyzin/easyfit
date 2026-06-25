@@ -4,17 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="4eb1cf52-3ce0-4e42-8037-f8ecd3920b14" name="Changes" comment="fix2">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/App.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/App.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/hooks/useWorkouts.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/hooks/useWorkouts.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/NewWorkoutPage.module.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/NewWorkoutPage.module.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/PersonPage.module.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/PersonPage.module.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/PersonPage.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/PersonPage.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/WorkoutPage.module.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/WorkoutPage.module.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/WorkoutPage.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/WorkoutPage.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/utils/workouts.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/utils/workouts.ts" afterDir="false" />
-    </list>
+    <list default="true" id="4eb1cf52-3ce0-4e42-8037-f8ecd3920b14" name="Changes" comment="add progress" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -64,7 +54,7 @@
       <workItem from="1782335861124" duration="868000" />
       <workItem from="1782336780859" duration="391000" />
       <workItem from="1782337874523" duration="4049000" />
-      <workItem from="1782409694761" duration="307000" />
+      <workItem from="1782409694761" duration="1037000" />
     </task>
     <task id="LOCAL-00001" summary="fix">
       <option name="closed" value="true" />
@@ -90,7 +80,23 @@
       <option name="project" value="LOCAL" />
       <updated>1782378871525</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="update">
+      <option name="closed" value="true" />
+      <created>1782410085184</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1782410085184</updated>
+    </task>
+    <task id="LOCAL-00005" summary="add progress">
+      <option name="closed" value="true" />
+      <created>1782411156524</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1782411156524</updated>
+    </task>
+    <option name="localTasksCounter" value="6" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -99,6 +105,8 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="fix" />
     <MESSAGE value="fix2" />
-    <option name="LAST_COMMIT_MESSAGE" value="fix2" />
+    <MESSAGE value="update" />
+    <MESSAGE value="add progress" />
+    <option name="LAST_COMMIT_MESSAGE" value="add progress" />
   </component>
 </project>

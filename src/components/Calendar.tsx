@@ -6,13 +6,14 @@ interface Props {
   selectedKey: string // выбранный день YYYY-MM-DD
   markedKeys: Set<string> // дни, в которые есть выполненные тренировки
   onSelect: (key: string) => void
+  flat?: boolean // без фона-карточки — для встраивания в шит
 }
 
 const WEEKDAYS = ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Вс']
 
 // Простой календарь в стиле iOS: месяц, навигация по месяцам, точки на днях
 // с тренировками. Без сторонних библиотек.
-export function Calendar({ selectedKey, markedKeys, onSelect }: Props) {
+export function Calendar({ selectedKey, markedKeys, onSelect, flat }: Props) {
   const initial = parseKey(selectedKey)
   const [view, setView] = useState({
     year: initial.getFullYear(),
@@ -43,7 +44,7 @@ export function Calendar({ selectedKey, markedKeys, onSelect }: Props) {
   ]
 
   return (
-    <div className={styles.calendar}>
+    <div className={`${styles.calendar} ${flat ? styles.flat : ''}`}>
       <div className={styles.header}>
         <button
           className={styles.nav}

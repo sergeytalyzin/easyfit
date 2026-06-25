@@ -6,9 +6,8 @@ import { useCompletedWorkoutsContext } from '../hooks/CompletedWorkoutsContext'
 import { Card } from '../components/Card'
 import { Button } from '../components/Button'
 import { Avatar } from '../components/Avatar'
-import { Calendar } from '../components/Calendar'
-import { TemplatePickerSheet } from '../components/TemplatePickerSheet'
-import { formatDate, dayKey, formatDayKeyFull } from '../utils/date'
+import { MarkWorkoutSheet } from '../components/MarkWorkoutSheet'
+import { formatDate } from '../utils/date'
 import { lastWorkoutOf, workoutsOf } from '../utils/workouts'
 import type { Workout } from '../types'
 import styles from './PersonPage.module.css'
@@ -21,21 +20,18 @@ export function PersonPage() {
   const { completed, completeTemplate, deleteCompletedByPerson } =
     useCompletedWorkoutsContext()
 
-  const [selectedKey, setSelectedKey] = useState(() => dayKey(new Date()))
-  const [pickerOpen, setPickerOpen] = useState(false)
+  const [markOpen, setMarkOpen] = useState(false)
 
   const person = people.find((p) => p.id === personId)
 
-  // Выполненные тренировки человека + индексы по дням (для точек и списка).
-  const ownCompleted = useMemo(
-    () => completed.filter((c) => c.personId === personId),
+  // Дни с выполненными тренировками — для точек в календаре.
+  const markedKeys = useMemo(
+    () =>
+      new Set(
+        completed.filter((c) => c.personId === personId).map((c) => c.date),
+      ),
     [completed, personId],
   )
-  const markedKeys = useMemo(
-    () => new Set(ownCompleted.map((c) => c.date)),
-    [ownCompleted],
-  )
-  const dayCompleted = ownCompleted.filter((c) => c.date === selectedKey)
 
   if (!person) {
     return (
@@ -62,9 +58,9 @@ export function PersonPage() {
     }
   }
 
-  function onPickTemplate(template: Workout) {
-    completeTemplate(template, selectedKey)
-    setPickerOpen(false)
+  function onSaveCompleted(template: Workout, dayKeyValue: string) {
+    completeTemplate(template, dayKeyValue)
+    setMarkOpen(false)
   }
 
   return (
@@ -90,34 +86,8 @@ export function PersonPage() {
         </button>
       </header>
 
-      {/* Календарь и отметка выполненной тренировки */}
-      <Calendar
-        selectedKey={selectedKey}
-        markedKeys={markedKeys}
-        onSelect={setSelectedKey}
-      />
-
-      <div className={styles.dayHead}>{formatDayKeyFull(selectedKey)}</div>
-
-      {dayCompleted.length > 0 && (
-        <div className={styles.dayList}>
-          {dayCompleted.map((c) => (
-            <Link
-              key={c.id}
-              to={`/person/${person.id}/completed/${c.id}`}
-              className={styles.dayLink}
-            >
-              <Card className={styles.dayItem}>
-                <span className={styles.dayCheck}>✓</span>
-                <span className={styles.dayName}>{c.name}</span>
-                <span className={styles.dayCount}>{c.exercises.length} упр.</span>
-              </Card>
-            </Link>
-          ))}
-        </div>
-      )}
-
-      <Button full onClick={() => setPickerOpen(true)}>
+      {/* Отметить выполненную тренировку (календарь — внутри попапа) */}
+      <Button full onClick={() => setMarkOpen(true)}>
         + Отметить тренировку
       </Button>
 
@@ -183,12 +153,12 @@ export function PersonPage() {
         Удалить человека
       </button>
 
-      <TemplatePickerSheet
-        open={pickerOpen}
-        onClose={() => setPickerOpen(false)}
-        dateLabel={formatDayKeyFull(selectedKey)}
+      <MarkWorkoutSheet
+        open={markOpen}
+        onClose={() => setMarkOpen(false)}
         templates={own}
-        onPick={onPickTemplate}
+        markedKeys={markedKeys}
+        onSave={onSaveCompleted}
       />
     </div>
   )

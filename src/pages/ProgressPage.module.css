@@ -42,6 +42,92 @@
   margin-bottom: 12px;
 }
 
+.chartCard {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.statsRow {
+  display: flex;
+  gap: 12px;
+}
+
+.stat {
+  flex: 1 1 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  background: var(--fill);
+  border-radius: 14px;
+  padding: 12px 8px;
+}
+
+.statNum {
+  font-size: 26px;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: var(--text);
+}
+
+.statLabel {
+  font-size: 13px;
+  color: var(--text-secondary);
+}
+
+.chart {
+  display: flex;
+  align-items: flex-end;
+  gap: 6px;
+  height: 132px;
+}
+
+.col {
+  flex: 1 1 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  height: 100%;
+}
+
+.barVal {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--blue);
+  height: 14px;
+}
+
+.barTrack {
+  flex: 1 1 auto;
+  width: 100%;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+}
+
+.bar {
+  width: 100%;
+  max-width: 26px;
+  min-height: 4px;
+  border-radius: 6px 6px 4px 4px;
+  background: linear-gradient(180deg, #4ea1ff 0%, var(--blue) 100%);
+  transition: height 0.35s cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+
+.barLabel {
+  font-size: 11px;
+  color: var(--text-tertiary);
+}
+
+.chartCaption {
+  text-align: center;
+  font-size: 13px;
+  color: var(--text-secondary);
+  margin-top: -4px;
+}
+
 .list {
   display: flex;
   flex-direction: column;

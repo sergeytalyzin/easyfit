@@ -63,62 +63,6 @@
   color: #d98a00;
 }
 
-.dayHead {
-  font-size: 15px;
-  font-weight: 600;
-  color: var(--text-secondary);
-  text-transform: capitalize;
-  margin-top: -4px;
-}
-
-.dayList {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
-.dayLink {
-  text-decoration: none;
-  color: inherit;
-}
-
-.dayItem {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 14px 16px;
-}
-
-.dayCheck {
-  flex: 0 0 auto;
-  width: 24px;
-  height: 24px;
-  border-radius: 50%;
-  background: #34c759;
-  color: #fff;
-  font-size: 14px;
-  font-weight: 700;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.dayName {
-  flex: 1 1 auto;
-  font-size: 17px;
-  font-weight: 700;
-  color: var(--text);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.dayCount {
-  flex: 0 0 auto;
-  font-size: 14px;
-  color: var(--text-secondary);
-}
-
 .section {
   font-size: 20px;
   font-weight: 800;
