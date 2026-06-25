@@ -4,7 +4,17 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="4eb1cf52-3ce0-4e42-8037-f8ecd3920b14" name="Changes" comment="fix" />
+    <list default="true" id="4eb1cf52-3ce0-4e42-8037-f8ecd3920b14" name="Changes" comment="fix2">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/App.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/App.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/hooks/useWorkouts.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/hooks/useWorkouts.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/NewWorkoutPage.module.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/NewWorkoutPage.module.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/PersonPage.module.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/PersonPage.module.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/PersonPage.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/PersonPage.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/WorkoutPage.module.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/WorkoutPage.module.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/WorkoutPage.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/WorkoutPage.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/utils/workouts.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/utils/workouts.ts" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -21,20 +31,20 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "main",
-    "last_opened_file_path": "/Users/sergey/Developer/easyfit",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "ts.external.directory.path": "/Users/sergey/Developer/easyfit/node_modules/typescript/lib",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/Users/sergey/Developer/easyfit&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;ts.external.directory.path&quot;: &quot;/Users/sergey/Developer/easyfit/node_modules/typescript/lib&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
@@ -53,7 +63,8 @@
       <workItem from="1782335091051" duration="752000" />
       <workItem from="1782335861124" duration="868000" />
       <workItem from="1782336780859" duration="391000" />
-      <workItem from="1782337874523" duration="2463000" />
+      <workItem from="1782337874523" duration="4049000" />
+      <workItem from="1782409694761" duration="307000" />
     </task>
     <task id="LOCAL-00001" summary="fix">
       <option name="closed" value="true" />
@@ -63,7 +74,23 @@
       <option name="project" value="LOCAL" />
       <updated>1782377905690</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="fix">
+      <option name="closed" value="true" />
+      <created>1782378670232</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1782378670232</updated>
+    </task>
+    <task id="LOCAL-00003" summary="fix2">
+      <option name="closed" value="true" />
+      <created>1782378871525</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1782378871525</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -71,6 +98,7 @@
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="fix" />
-    <option name="LAST_COMMIT_MESSAGE" value="fix" />
+    <MESSAGE value="fix2" />
+    <option name="LAST_COMMIT_MESSAGE" value="fix2" />
   </component>
 </project>

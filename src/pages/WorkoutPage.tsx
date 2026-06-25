@@ -1,7 +1,10 @@
+import { useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { useWorkoutsContext } from '../hooks/WorkoutsContext'
+import { usePeopleContext } from '../hooks/PeopleContext'
 import { ExerciseItem } from '../components/ExerciseItem'
 import { Button } from '../components/Button'
+import { CopyWorkoutSheet } from '../components/CopyWorkoutSheet'
 import { formatDate } from '../utils/date'
 import styles from './WorkoutPage.module.css'
 
@@ -9,9 +12,12 @@ export function WorkoutPage() {
   const { id = '', personId = '' } = useParams()
   const navigate = useNavigate()
   const backToPerson = `/person/${personId}`
+  const [copyOpen, setCopyOpen] = useState(false)
+  const { people } = usePeopleContext()
   const {
     workouts,
     updateWorkout,
+    copyWorkout,
     deleteWorkout,
     addExercise,
     updateExercise,
@@ -39,6 +45,12 @@ export function WorkoutPage() {
       deleteWorkout(workout!.id)
       navigate(backToPerson, { replace: true })
     }
+  }
+
+  function onCopyTo(targetPersonId: string) {
+    const copy = copyWorkout(workout!.id, targetPersonId)
+    setCopyOpen(false)
+    if (copy) navigate(`/person/${targetPersonId}/workout/${copy.id}`)
   }
 
   return (
@@ -75,9 +87,21 @@ export function WorkoutPage() {
         + упражнение
       </Button>
 
+      <Button full variant="secondary" onClick={() => setCopyOpen(true)}>
+        ⧉ Копировать другому
+      </Button>
+
       <button className={styles.deleteWorkout} onClick={onDeleteWorkout}>
         Удалить тренировку
       </button>
+
+      <CopyWorkoutSheet
+        open={copyOpen}
+        onClose={() => setCopyOpen(false)}
+        people={people}
+        currentPersonId={personId}
+        onPick={onCopyTo}
+      />
     </div>
   )
 }

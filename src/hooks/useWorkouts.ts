@@ -4,6 +4,7 @@
 import { useCallback, useEffect, useState } from 'react'
 import type { Exercise, Workout, WorkoutSet } from '../types'
 import { loadWorkouts, saveWorkouts } from '../utils/storage'
+import { cloneSets } from '../utils/workouts'
 import { uid } from '../utils/id'
 
 export function useWorkouts() {
@@ -25,6 +26,30 @@ export function useWorkouts() {
     setWorkouts((prev) => [workout, ...prev])
     return workout
   }, [])
+
+  // Копирование тренировки другому человеку (или себе же).
+  // Создаём независимый дубликат: новые id у тренировки, упражнений и
+  // подходов, дата — текущая, привязка к выбранному человеку.
+  const copyWorkout = useCallback(
+    (workoutId: string, targetPersonId: string): Workout | null => {
+      const src = workouts.find((w) => w.id === workoutId)
+      if (!src) return null
+      const copy: Workout = {
+        id: uid(),
+        personId: targetPersonId,
+        name: src.name,
+        date: new Date().toISOString(),
+        exercises: src.exercises.map((e) => ({
+          id: uid(),
+          name: e.name,
+          sets: cloneSets(e.sets, uid),
+        })),
+      }
+      setWorkouts((prev) => [copy, ...prev])
+      return copy
+    },
+    [workouts],
+  )
 
   // Удаление всех тренировок человека — для каскадного удаления профиля.
   const deleteWorkoutsByPerson = useCallback((personId: string) => {
@@ -168,6 +193,7 @@ export function useWorkouts() {
   return {
     workouts,
     createWorkout,
+    copyWorkout,
     updateWorkout,
     deleteWorkout,
     deleteWorkoutsByPerson,

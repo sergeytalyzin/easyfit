@@ -67,6 +67,16 @@ export function PersonPage() {
         Новая тренировка
       </Button>
 
+      {own.length > 0 && (
+        <Button
+          full
+          variant="secondary"
+          onClick={() => navigate(`/person/${person.id}/stats`)}
+        >
+          📈 История и прогресс
+        </Button>
+      )}
+
       {own.length === 0 ? (
         <div className={styles.empty}>
           <div className={styles.emptyIcon}>🏋️</div>

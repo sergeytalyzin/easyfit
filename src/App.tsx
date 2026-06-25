@@ -12,6 +12,7 @@ import { PeoplePage } from './pages/PeoplePage'
 import { PersonPage } from './pages/PersonPage'
 import { NewWorkoutPage } from './pages/NewWorkoutPage'
 import { WorkoutPage } from './pages/WorkoutPage'
+import { StatsPage } from './pages/StatsPage'
 
 // Срабатывает один раз за загрузку страницы: если выбран основной человек
 // и он существует — сразу открываем его профиль вместо экрана «Люди».
@@ -46,6 +47,7 @@ export default function App() {
               <Route path="/" element={<PeoplePage />} />
               <Route path="/person/:personId" element={<PersonPage />} />
               <Route path="/person/:personId/new" element={<NewWorkoutPage />} />
+              <Route path="/person/:personId/stats" element={<StatsPage />} />
               <Route
                 path="/person/:personId/workout/:id"
                 element={<WorkoutPage />}
