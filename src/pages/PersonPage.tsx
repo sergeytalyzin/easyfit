@@ -1,4 +1,5 @@
-import { Link, useNavigate, useParams } from 'react-router-dom'
+import { useState } from 'react'
+import { useNavigate, useParams } from 'react-router-dom'
 import { usePeopleContext } from '../hooks/PeopleContext'
 import { useWorkoutsContext } from '../hooks/WorkoutsContext'
 import { useCompletedWorkoutsContext } from '../hooks/CompletedWorkoutsContext'
@@ -7,6 +8,7 @@ import { Button } from '../components/Button'
 import { Avatar } from '../components/Avatar'
 import { formatDate } from '../utils/date'
 import { lastWorkoutOf, workoutsOf } from '../utils/workouts'
+import type { Workout } from '../types'
 import styles from './PersonPage.module.css'
 
 export function PersonPage() {
@@ -92,23 +94,16 @@ export function PersonPage() {
       ) : (
         <div className={styles.list}>
           {own.map((w, i) => (
-            <Link
+            <div
               key={w.id}
-              to={`/person/${person.id}/workout/${w.id}`}
-              className={`${styles.link} appear`}
+              className="appear"
               style={{ animationDelay: `${Math.min(i, 8) * 40}ms` }}
             >
-              <Card className={styles.item}>
-                <div>
-                  <div className={styles.wName}>{w.name}</div>
-                  <div className={styles.wMeta}>{formatDate(w.date)}</div>
-                </div>
-                <div className={styles.count}>
-                  {w.exercises.length}
-                  <span className={styles.countLabel}>упр.</span>
-                </div>
-              </Card>
-            </Link>
+              <TemplateCard
+                workout={w}
+                onOpen={() => navigate(`/person/${person.id}/workout/${w.id}`)}
+              />
+            </div>
           ))}
         </div>
       )}
@@ -117,5 +112,58 @@ export function PersonPage() {
         Удалить человека
       </button>
     </div>
+  )
+}
+
+// Сворачиваемая карточка шаблона: свёрнуто — только название, развёрнуто —
+// все упражнения с подходами. «Открыть» ведёт в полный редактор.
+function TemplateCard({
+  workout,
+  onOpen,
+}: {
+  workout: Workout
+  onOpen: () => void
+}) {
+  const [open, setOpen] = useState(false)
+
+  return (
+    <Card className={styles.tplCard}>
+      <button
+        className={styles.tplHead}
+        onClick={() => setOpen((o) => !o)}
+        aria-expanded={open}
+      >
+        <span className={styles.wName}>{workout.name}</span>
+        <span className={styles.tplCount}>{workout.exercises.length} упр.</span>
+        <span className={`${styles.chevron} ${open ? styles.chevronOpen : ''}`}>
+          ›
+        </span>
+      </button>
+
+      {open && (
+        <div className={styles.tplBody}>
+          {workout.exercises.length === 0 ? (
+            <p className={styles.tplEmpty}>Упражнений пока нет</p>
+          ) : (
+            <ul className={styles.exList}>
+              {workout.exercises.map((ex) => (
+                <li key={ex.id} className={styles.exRow}>
+                  <span className={styles.exName}>{ex.name || 'Без названия'}</span>
+                  <span className={styles.exSets}>
+                    {ex.sets.length
+                      ? ex.sets.map((s) => `${s.weight}×${s.reps}`).join(', ')
+                      : '—'}
+                  </span>
+                </li>
+              ))}
+            </ul>
+          )}
+
+          <Button full variant="secondary" onClick={onOpen}>
+            Открыть
+          </Button>
+        </div>
+      )}
+    </Card>
   )
 }
