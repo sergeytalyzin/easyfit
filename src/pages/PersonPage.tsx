@@ -151,7 +151,7 @@ function TemplateCard({
                   <span className={styles.exName}>{ex.name || 'Без названия'}</span>
                   <span className={styles.exSets}>
                     {ex.sets.length
-                      ? ex.sets.map((s) => `${s.weight}×${s.reps}`).join(', ')
+                      ? ex.sets.slice(0,3).map((s) => `${s.weight}×${s.reps}`).join(', ')
                       : '—'}
                   </span>
                 </li>

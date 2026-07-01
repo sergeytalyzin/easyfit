@@ -8,6 +8,7 @@ import { Button } from '../components/Button'
 import { CopyWorkoutSheet } from '../components/CopyWorkoutSheet'
 import { MarkWorkoutSheet } from '../components/MarkWorkoutSheet'
 import { formatDate } from '../utils/date'
+import { fireConfetti } from '../utils/confetti'
 import styles from './WorkoutPage.module.css'
 
 export function WorkoutPage() {
@@ -67,8 +68,10 @@ export function WorkoutPage() {
   }
 
   function onMarkDone(dayKeyValue: string, exerciseIds: string[]) {
-    completeTemplate(workout!, dayKeyValue, exerciseIds)
+    const record = completeTemplate(workout!, dayKeyValue, exerciseIds)
+    if (!record) return // при неуспехе — без конфетти
     setMarkOpen(false)
+    fireConfetti()
     navigate(`/person/${personId}/progress`)
   }
 

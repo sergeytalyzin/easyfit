@@ -10,6 +10,39 @@
   gap: 8px;
 }
 
+.toggle {
+  appearance: none;
+  border: none;
+  background: transparent;
+  flex: 0 0 auto;
+  width: 26px;
+  height: 26px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  padding: 0;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.chevron {
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--text-tertiary);
+  transform: rotate(90deg);
+  transition: transform 0.2s ease;
+}
+.chevronOpen {
+  transform: rotate(-90deg);
+}
+
+.count {
+  flex: 0 0 auto;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-secondary);
+}
+
 .name {
   flex: 1;
   appearance: none;
